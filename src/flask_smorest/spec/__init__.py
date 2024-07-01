@@ -133,12 +133,11 @@ class DocBlueprintMixin:
 
     def _openapi_redoc(self):
         """Expose OpenAPI spec with ReDoc"""
-        # Check if redoc_url is a relative path
+        redoc_url = self._redoc_url
         if not self._redoc_url.startswith(("http://", "https://")):
-            # Construct the relative path to the file in the templates folder
-            redoc_url = flask.url_for("static", filename=self._redoc_url)
-        else:
-            redoc_url = self._redoc_url
+            redoc_url = flask.url_for(
+                f"{self._make_doc_blueprint_name()}.{self._redoc_url}"
+            )
         return flask.render_template(
             "redoc.html",
             spec_url=flask.url_for(f"{self._make_doc_blueprint_name()}.openapi_json"),
