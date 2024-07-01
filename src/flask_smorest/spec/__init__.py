@@ -133,16 +133,11 @@ class DocBlueprintMixin:
 
     def _openapi_redoc(self):
         """Expose OpenAPI spec with ReDoc"""
-        redoc_url = self._redoc_url
-        if not self._redoc_url.startswith(("http://", "https://")):
-            redoc_url = flask.url_for(
-                f"{self._make_doc_blueprint_name()}.{self._redoc_url}"
-            )
         return flask.render_template(
             "redoc.html",
             spec_url=flask.url_for(f"{self._make_doc_blueprint_name()}.openapi_json"),
             title=self.spec.title,
-            redoc_url=redoc_url,
+            redoc_url=self._redoc_url,
         )
 
     def _openapi_swagger_ui(self):
