@@ -42,7 +42,7 @@ Documentation process works in several steps:
 from copy import deepcopy
 from functools import wraps
 
-from flask import Blueprint as FlaskBlueprint
+from flask import Blueprint as FlaskBlueprint, request
 from flask.views import MethodView
 
 from .arguments import ArgumentsMixin
@@ -225,7 +225,7 @@ class Blueprint(
         # Store parameters doc info from route decorator
         endpoint_doc_info["parameters"] = parameters
 
-    def register_views_in_doc(self, api, app, spec, *, name, parameters):
+    def register_views_in_doc(self, api, app, spec, *, name, parameters, subdomain):
         """Register views information in documentation
 
         If a schema in a parameter or a response appears in the spec
@@ -267,6 +267,15 @@ class Blueprint(
                         name,
                     ]
                 )
+                # Add servers information dynamically
+                if spec.openapi_version.major >= 3 and subdomain:
+                    with app.app_context():
+                        with app.test_request_context():
+                            operation_doc["servers"] = [
+                                {
+                                    "url": f"//{subdomain}.{request.host}",
+                                }
+                            ]
                 # Complete doc with manual doc info
                 manual_doc = operation_doc_info.get("manual_doc", {})
                 doc[method_l] = deepupdate(operation_doc, manual_doc)
