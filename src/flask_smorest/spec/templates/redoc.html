@@ -15,8 +15,20 @@
       }
     </style>
   </head>
-  <body>
-    <redoc spec-url="{{ spec_url }}" lazy-rendering></redoc>
-    <script src="{{redoc_url}}"></script>
-  </body>
+<body>
+  <!-- Container for Redoc -->
+  <div id="redoc_container"></div>
+
+  <!-- Script tag for Redoc Try It Out -->
+  <script type="text/javascript" src="{{redoc_url}}"></script>
+
+  <!-- Initialization script -->
+  <script>
+    RedocTryItOut.init(
+      "{{ spec_url }}",
+      { title: "{{ title }}" },
+      document.getElementById("redoc_container")
+    );
+  </script>
+</body>
 </html>
