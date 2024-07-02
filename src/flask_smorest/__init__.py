@@ -97,7 +97,6 @@ class Api(APISpecMixin, ErrorHandlerMixin):
         Must be called after app is initialized.
         """
         blp_name = options.get("name", blp.name)
-        blp_subdomain = options.get("subdomain", None)
 
         self._app.extensions["flask-smorest"]["blp_name_to_api"][blp_name] = self
 
@@ -110,7 +109,6 @@ class Api(APISpecMixin, ErrorHandlerMixin):
             self.spec,
             name=blp_name,
             parameters=parameters,
-            subdomain=blp_subdomain,
         )
 
         # Add tag relative to this resource to the global tag list
