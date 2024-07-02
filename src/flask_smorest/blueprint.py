@@ -70,6 +70,7 @@ class Blueprint(
 
     def __init__(self, *args, **kwargs):
         self.description = kwargs.pop("description", "")
+        self._global_manual_doc_funcs = kwargs.pop("manual_doc_funcs", [])
 
         super().__init__(*args, **kwargs)
 
@@ -91,7 +92,6 @@ class Blueprint(
         # }
         self._docs = {}
         self._endpoints = []
-        self._global_manual_doc_funcs = []
         self._prepare_doc_cbks = [
             self._prepare_arguments_doc,
             self._prepare_response_doc,
