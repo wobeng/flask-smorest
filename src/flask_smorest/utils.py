@@ -13,12 +13,15 @@ def deepupdate(original, update):
     """Recursively update a dict.
 
     Subdict's won't be overwritten but also updated.
+    If a value is a list, extend the original list.
     """
     if not isinstance(original, abc.Mapping):
         return update
     for key, value in update.items():
         if isinstance(value, abc.Mapping):
             original[key] = deepupdate(original.get(key, {}), value)
+        elif isinstance(value, list) and isinstance(original.get(key), list):
+            original[key].extend(value)
         else:
             original[key] = value
     return original
