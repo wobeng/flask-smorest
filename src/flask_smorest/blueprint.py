@@ -271,7 +271,7 @@ class Blueprint(
                 # Tag all operations with Blueprint name unless tags specified
                 if tags is not None:
                     operation_doc["tags"] = tags
-                if operation_doc.get("tags") is None:
+                if not operation_doc.get("tags", None):
                     operation_doc["tags"] = [name]
 
                 # Complete doc with manual doc info
