@@ -256,6 +256,7 @@ class Blueprint(
                     operation_doc = deepupdate(operation_doc, output)
 
                 tags = operation_doc_info.pop("tags")
+
                 for func in self._prepare_doc_cbks:
                     operation_doc = func(
                         operation_doc,
@@ -266,14 +267,13 @@ class Blueprint(
                         method=method_l,
                     )
                 operation_doc.update(operation_doc_info["docstring"])
+
                 # Tag all operations with Blueprint name unless tags specified
-                operation_doc["tags"] = (
-                    tags
-                    if tags is not None
-                    else [
-                        name,
-                    ]
-                )
+                if tags is not None:
+                    operation_doc["tags"] = tags
+                if operation_doc.get("tags") is None:
+                    operation_doc["tags"] = [name]
+
                 # Complete doc with manual doc info
                 manual_doc = operation_doc_info.get("manual_doc", {})
                 doc[method_l] = deepupdate(operation_doc, manual_doc)
