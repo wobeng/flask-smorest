@@ -113,4 +113,4 @@ class Api(APISpecMixin, ErrorHandlerMixin):
         )
 
         # Add tag relative to this resource to the global tag list
-        self.spec.tag({"name": blp_name, "description": blp.description})
+        # self.spec.tag({"name": blp_name, "description": blp.description})
