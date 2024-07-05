@@ -40,12 +40,13 @@ class Api(APISpecMixin, ErrorHandlerMixin):
     parameter `API_SPEC_OPTIONS`.
     """
 
-    def __init__(self, app=None, *, spec_kwargs=None, config_prefix=""):
+    def __init__(self, app=None, *, spec_kwargs=None, config_prefix="", subdomain=None):
         self._app = app
         self._spec_kwargs = spec_kwargs or {}
         self.config_prefix = normalize_config_prefix(config_prefix)
         self.config = None
         self.spec = None
+        self.subdomain = subdomain
         # Use lists to enforce order
         self._fields = []
         self._converters = []
@@ -112,4 +113,4 @@ class Api(APISpecMixin, ErrorHandlerMixin):
         )
 
         # Add tag relative to this resource to the global tag list
-        #self.spec.tag({"name": blp_name, "description": blp.description})
+        self.spec.tag({"name": blp_name, "description": blp.description})

@@ -62,6 +62,7 @@ class DocBlueprintMixin:
                 __name__,
                 url_prefix=_add_leading_slash(api_url),
                 template_folder="./templates",
+                subdomain=self.subdomain,
             )
             # Serve json spec at 'url_prefix/openapi.json' by default
             json_path = self.config.get("OPENAPI_JSON_PATH", "openapi.json")

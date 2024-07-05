@@ -248,14 +248,13 @@ class Blueprint(
             doc = {}
             # Use doc info stored by decorators to generate doc
             for method_l, operation_doc_info in endpoint_doc_info.items():
+                tags = operation_doc_info.pop("tags")
                 operation_doc = {}
 
                 # Add global manual doc  funcs
                 for manual_doc_func in self._global_manual_doc_funcs:
                     output = manual_doc_func(api, app, spec)
                     operation_doc = deepupdate(operation_doc, output)
-
-                tags = operation_doc_info.pop("tags")
 
                 for func in self._prepare_doc_cbks:
                     operation_doc = func(
