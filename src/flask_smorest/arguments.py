@@ -73,9 +73,7 @@ class ArgumentsMixin:
         if description is not None:
             parameters["description"] = description
 
-        error_status_code = kwargs.get(
-            "error_status_code", self.ARGUMENTS_PARSER.DEFAULT_VALIDATION_STATUS
-        )
+        error_status_code = kwargs.get("error_status_code", 400)
 
         def decorator(func):
             @wraps(func)

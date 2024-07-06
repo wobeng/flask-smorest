@@ -37,12 +37,12 @@ class Error(Exception):
                 "code": self.status_code,
                 "message": self.message,
                 "error_type": self.error_type,
-                "reason": self.reason,
             }
         }
+        if self.reason:
+            output["error"]["reason"] = self.reason
         if self.errors:
             output["error"]["errors"] = self.errors
-            output["error"]["reason"] = self.errors[0]["reason"]
         return output
 
 
@@ -52,14 +52,14 @@ class ErrorSchema(ma.Schema):
     Not actually used to dump payload, but only for documentation purposes
     """
 
-    class errorSchema(ma.Schema):
+    class NestedSchema(ma.Schema):
         code = ma.fields.Integer(metadata={"description": "Error code"})
         message = ma.fields.String(metadata={"description": "Error message"})
         error_type = ma.fields.String(metadata={"description": "Error type"})
         reason = ma.fields.String(metadata={"description": "Reason"})
         errors = ma.fields.List(ma.fields.Dict(metadata={"description": "Errors"}))
 
-    error = ma.fields.Nested(errorSchema)
+    error = ma.fields.Nested(NestedSchema)
 
 
 class ErrorHandlerMixin:
@@ -85,17 +85,17 @@ class ErrorHandlerMixin:
         :rtype: list
         """
         errors = []
-        for location_type, field_errors in messages["errors"].items():
+        for location_type, field_errors in messages.items():
             for field, error_messages in field_errors.items():
                 errors.append(
                     {
                         "location": field,
                         "location_type": location_type,
                         "messages": error_messages,
-                        "reason": error_messages[0],
                     }
                 )
         return {
+            "code": 400,
             "errors": errors,
             "error_type": "SchemaFieldsException",
             "message": "Request input schema is invalid",
@@ -145,4 +145,4 @@ class ErrorHandlerMixin:
             if "headers" in data:
                 headers = data["headers"]
 
-        return Error(**payload).to_dict(), error.code, headers
+        return Error(**payload).to_dict(), payload["code"], headers
