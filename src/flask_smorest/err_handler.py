@@ -74,6 +74,7 @@ class ErrorHandlerMixin:
         This method registers a default error handler for ``HTTPException``.
         """
         self._app.register_error_handler(HTTPException, self.handle_http_exception)
+        self._app.register_error_handler(Error, self.handle_error_exception)
 
     @staticmethod
     def convert_webargs_errors(messages):
@@ -100,6 +101,9 @@ class ErrorHandlerMixin:
             "error_type": "SchemaFieldsException",
             "message": "Request input schema is invalid",
         }
+
+    def handle_error_exception(self, error):
+        return error.to_dict(), error.code
 
     def handle_http_exception(self, error):
         """Return a JSON response containing a description of the error
