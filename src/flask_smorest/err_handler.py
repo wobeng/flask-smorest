@@ -1,7 +1,7 @@
 """Exception handler"""
 
 from werkzeug.exceptions import HTTPException
-
+from flask import jsonify
 import marshmallow as ma
 
 
@@ -44,6 +44,11 @@ class Error(Exception):
         if self.errors:
             output["error"]["errors"] = self.errors
         return output
+
+    def response(self):
+        response = jsonify(self.to_dict())
+        response.status_code = self.status_code
+        return response
 
 
 class ErrorSchema(ma.Schema):
