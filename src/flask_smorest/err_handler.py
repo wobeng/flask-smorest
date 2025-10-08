@@ -93,14 +93,15 @@ class ErrorHandlerMixin:
         errors = []
         if isinstance(messages, dict):
             for location_type, field_errors in messages.items():
-                for field, error_messages in field_errors.items():
-                    errors.append(
-                        {
-                            "location": field,
-                            "location_type": location_type,
-                            "messages": error_messages,
-                        }
-                    )
+                if isinstance(field_errors, dict):
+                    for field, error_messages in field_errors.items():
+                        errors.append(
+                            {
+                                "location": field,
+                                "location_type": location_type,
+                                "messages": error_messages,
+                            }
+                        )
         return {
             "code": 400,
             "errors": errors,
