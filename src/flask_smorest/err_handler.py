@@ -14,6 +14,7 @@ class Error(Exception):
     code = 400
     msg = "Something went wrong"
     error_type = "ApiException"
+    reason = ""
 
     def __init__(
         self,
@@ -29,7 +30,7 @@ class Error(Exception):
         self.message = message
         self.error_type = error_type or self.error_type
         self.status_code = code or self.code
-        self.reason = reason or {}
+        self.reason = reason or self.reason
 
     def to_dict(self):
         output = {
